@@ -1,0 +1,3142 @@
+{
+	"info": {
+		"_postman_id": "c763d2c7-22f0-4520-9eac-44add8392d81",
+		"name": "新网关系统",
+		"description": "# 商户接入流程\n  根据pacypay提供的商户接入文档参考代码实现您的电子商务系统与pacypay的电子支付平台实现正确的对接是使用pacypay支付服务的前提。在接入过程中注意以下接入流程将使您的接入工作达到事半功倍的效果。 \n  1. 双方公司洽谈，签订合同。\n  2. 系统建档，分配商户号，子账户，signKey值给对方。\n  3. 取得开发文档。\n  4. 查看接口开发文档：刚开通的商户号为测试状态，测试时请使用测试订单提交地址。\n  5. 进行接口调试，有任何问题根据本文档不能解决的，请联系技术支持。\n  6. 测试通过后，请联系客服经理或技术支持，检查通过后，会提供新的正式环境账号。\n  7. 更换正式订单提交地址。",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "支付服务",
+			"item": [
+				{
+					"name": "直连支付接口-2",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "71574085-3d8f-417a-bc2e-7426eac29db5",
+								"exec": [
+									"var signKey = 'r56cersikIyMKB52V4I6pOt7U35326';\r",
+									"\r",
+									"let param = request.data;\r",
+									"let signstring = param[\"merchantNo\"] + param[\"subAccount\"] + param[\"transactionId\"] + param[\"currency\"] + param[\"amount\"] + param[\"firstName\"] + param[\"lastName\"] + param[\"cardNumber\"] + param[\"year\"] + param[\"month\"] + param[\"cvv\"] + param[\"email\"] + signKey;\r",
+									"\r",
+									"pm.environment.set(\"sign\", CryptoJS.SHA256(signstring).toString());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded; charset=utf-8"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "merchantNo",
+									"value": "21634",
+									"description": "[必须] 商户号",
+									"type": "text"
+								},
+								{
+									"key": "subAccount",
+									"value": "21634001",
+									"description": "[必须] 子账户",
+									"type": "text"
+								},
+								{
+									"key": "transactionId",
+									"value": "20072208",
+									"type": "text"
+								},
+								{
+									"key": "amount",
+									"value": "24",
+									"description": "[必须] 【交易总金额】包括订单的其他所有金额之和.只能为数字。小数位数请参考附录：交易币种",
+									"type": "text"
+								},
+								{
+									"key": "currency",
+									"value": "USD",
+									"description": "[必须] 【交易币种】币种简称，具体详见附录:交易币种",
+									"type": "text"
+								},
+								{
+									"key": "discount",
+									"value": "-1",
+									"description": "【折扣】折扣默认为负值只能为数字,并且只限小数点后2位小数",
+									"type": "text"
+								},
+								{
+									"key": "products",
+									"value": "iphone#,#NUM1#,#230.00#,#1#;#ipad#,#NUM2#,#290.00#,#2",
+									"description": "[必须] 【货物详细信息】包括货物名称，ID，单价，数量具体详见附录：货物信息",
+									"type": "text"
+								},
+								{
+									"key": "notifyUrl",
+									"value": "http://9uz3rhby.vaiwan.com/notify",
+									"description": "【异步返回地址】返回交易异步信息到商户网店",
+									"type": "text"
+								},
+								{
+									"key": "platform",
+									"value": "taobao.com",
+									"description": "平台",
+									"type": "text"
+								},
+								{
+									"key": "freightFee",
+									"value": "2.32",
+									"description": "【运费】只能为数字,并且只限小数点后2位小数",
+									"type": "text"
+								},
+								{
+									"key": "consumerId",
+									"value": "testShop",
+									"description": "[必须]  购物者的唯一ID",
+									"type": "text"
+								},
+								{
+									"key": "consumerLevel",
+									"value": "VIP",
+									"description": "购物者级别",
+									"type": "text"
+								},
+								{
+									"key": "token",
+									"value": "",
+									"description": "【一键支付】YES：需要一键支付NO：不需要一键支付此字段在使用TOKEN时为必填",
+									"type": "text"
+								},
+								{
+									"key": "merchantBizId",
+									"value": "",
+									"description": "【商户唯一键】商户唯一键值",
+									"type": "text"
+								},
+								{
+									"key": "payToken",
+									"value": "",
+									"description": "【支付TOKEN】在使用TOKEN支付时需要传此参数注：支付TOKEN的有效期与信用卡的有效期一致，过期的TOKEN需要得新提交信用卡信息产生新的TOKEN来交易。支付TOKEN使用范例见附录：支付TOKEN使用示例",
+									"type": "text"
+								},
+								{
+									"key": "cardNumber",
+									"value": "4012000000060085",
+									"description": "[必须] 【卡号】说明：支付时信用卡的卡号注：此参数在参数支付Token有值的时不需要传值",
+									"type": "text"
+								},
+								{
+									"key": "sign",
+									"value": "{{sign}}",
+									"description": "[必须] 【签名信息】明文加密结构: merNo + gatewayNo +orderNo + orderCurrency +orderAmount + firstName + lastName + cardNo + cardExpireYear  + cardExpireMonth+ cardSecurityCode + email + signkey加密后的签名要转换为大写，各语言加密方式不同，详见附录：加密方式",
+									"type": "text"
+								},
+								{
+									"key": "month",
+									"value": "12",
+									"description": "[必须] 【信用卡有效月份】示例：05有效月份：大于等于当前月份注：此参数在参数支付Token有值的时不需要传值",
+									"type": "text"
+								},
+								{
+									"key": "year",
+									"value": "2023",
+									"description": "[必须] 【信用卡有效年份】示例：2020注：此参数在参数支付Token有值的时不需要传值",
+									"type": "text"
+								},
+								{
+									"key": "cvv",
+									"value": "835",
+									"description": "[必须] 【安全码】信用卡背面签名条一串数字的后3-4位注：此参数在使用Maestro卡或Token支付时不需要传值",
+									"type": "text"
+								},
+								{
+									"key": "issuingBank",
+									"value": "ICBC",
+									"description": "发卡银行",
+									"type": "text"
+								},
+								{
+									"key": "firstName",
+									"value": "Travis",
+									"description": "[必须] 【持卡人名】注：此参数在参数支付Token有值的时不需要传值",
+									"type": "text"
+								},
+								{
+									"key": "lastName",
+									"value": "Pastrana",
+									"description": "[必须] 【持卡人姓】注：此参数在参数支付Token有值的时不需要传值",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "13917172679@163.com",
+									"description": "[必须] 持卡人电子邮件",
+									"type": "text"
+								},
+								{
+									"key": "transactionIp",
+									"value": "245.253.2.12",
+									"description": "[必须] 持卡人IP",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "+1987987987987",
+									"description": "【持卡人电话】需为8-9位纯数字实物交易时若买家国家为巴西，则此参数为必填",
+									"type": "text"
+								},
+								{
+									"key": "country",
+									"value": "CN",
+									"description": "持卡人国家",
+									"type": "text"
+								},
+								{
+									"key": "state",
+									"value": "guangdong",
+									"description": "持卡人所在州",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "shenzhen",
+									"description": "持卡人城市",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "futian",
+									"description": "持卡人详细联系地址",
+									"type": "text"
+								},
+								{
+									"key": "zipCode",
+									"value": "518000",
+									"description": "持卡人邮政编码",
+									"type": "text"
+								},
+								{
+									"key": "operationSystem",
+									"value": "Win10",
+									"description": "持卡人电脑操作系统",
+									"type": "text"
+								},
+								{
+									"key": "browerType",
+									"value": "Mozilla/5.0 (Windows NT 10.0; WOW64)",
+									"description": "浏览器类型",
+									"type": "text"
+								},
+								{
+									"key": "browerLan",
+									"value": "en-US",
+									"description": "浏览器语言",
+									"type": "text"
+								},
+								{
+									"key": "timeZone",
+									"value": "0",
+									"description": "时区",
+									"type": "text"
+								},
+								{
+									"key": "screenPixel",
+									"value": "1600x900",
+									"description": "屏幕分辨率",
+									"type": "text"
+								},
+								{
+									"key": "isPasteCard",
+									"value": "0",
+									"description": "卡号是否复制粘贴",
+									"type": "text"
+								},
+								{
+									"key": "newCookies",
+									"value": "billCountry=UK",
+									"description": "新cookie值 组装示例：key1=val1&key2=val2",
+									"type": "text"
+								},
+								{
+									"key": "oldCookies",
+									"value": "",
+									"description": "旧cookie值 组装示例：key1=val1&key2=val2",
+									"type": "text"
+								},
+								{
+									"key": "transactionWebSite",
+									"value": "http://9uz3rhby.vaiwan.com",
+									"description": "[必须] 来源网站 即购物者的网站域名",
+									"type": "text"
+								},
+								{
+									"key": "personTaxId",
+									"value": "",
+									"description": "【个人税务登记号】巴西国家的税号，例如：“84461807231”CPF长14位对接巴西信用卡必须传此参数",
+									"type": "text"
+								},
+								{
+									"key": "areaCode",
+									"value": "",
+									"description": "【电话区号】例如：“11”对接巴西信用卡必须传此参数",
+									"type": "text"
+								},
+								{
+									"key": "birthday",
+									"value": "",
+									"description": "【生日】“YYYY-MM-DD”例如：“1988-11-01”对接巴西信用卡必须传此参数",
+									"type": "text"
+								},
+								{
+									"key": "tokenValue",
+									"value": "",
+									"description": "【巴西卡号Token】获取巴西卡号Token需要内嵌入APACPAY JS“payment.apacpay.min.js”，详见附录：获取巴西卡号Token示例对接巴西信用卡必须传此参数，若此值不为空允许CVV为空",
+									"type": "text"
+								},
+								{
+									"key": "installment",
+									"value": "",
+									"description": "【信用卡分期】2位数字，例如：2表示分两期目前只支持巴西信用卡，详见附录：获取信用卡分期示例",
+									"type": "text"
+								},
+								{
+									"key": "freightMethod",
+									"value": "xxx",
+									"description": "持卡人选择的发货方式名称",
+									"type": "text"
+								},
+								{
+									"key": "consigneeFirstName",
+									"value": "li",
+									"description": "收货人名",
+									"type": "text"
+								},
+								{
+									"key": "consigneeLastName",
+									"value": "si",
+									"description": "收货人姓",
+									"type": "text"
+								},
+								{
+									"key": "consigneeEmail",
+									"value": "test@126.com",
+									"description": "收货人邮箱",
+									"type": "text"
+								},
+								{
+									"key": "consigneePhone",
+									"value": "18666666666",
+									"description": "收货人电话",
+									"type": "text"
+								},
+								{
+									"key": "consigneeCountry",
+									"value": "US",
+									"description": "收货人国家",
+									"type": "text"
+								},
+								{
+									"key": "consigneeState",
+									"value": "NY",
+									"description": "收货人省份",
+									"type": "text"
+								},
+								{
+									"key": "consigneeCity",
+									"value": "NY",
+									"description": "收货人城市",
+									"type": "text"
+								},
+								{
+									"key": "consigneeAddress",
+									"value": "huaerjie",
+									"description": "收货人详细地址",
+									"type": "text"
+								},
+								{
+									"key": "consigneeZipCode",
+									"value": "55555",
+									"description": "收货人邮编",
+									"type": "text"
+								},
+								{
+									"key": "remark",
+									"value": "直连支付测试",
+									"description": "【说明】存放商户自己的信息，随订单传送到支付平台，返回内容与传输内容一致",
+									"type": "text"
+								},
+								{
+									"key": "setResult",
+									"value": "0",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "isOpen3D",
+									"value": "do3DS",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://9uz3rhby5ozubwy.vaiwan.com/gateway/TPInterface",
+							"protocol": "http",
+							"host": [
+								"9uz3rhby5ozubwy",
+								"vaiwan",
+								"com"
+							],
+							"path": [
+								"gateway",
+								"TPInterface"
+							]
+						},
+						"description": "该接口支付采用服务器端对接，即 Server-To-Server 模式，具体流程如下：  \r\n1. 网店下订单  \r\n2. 商户支付页面收集支付卡信息  \r\n3. 把订单信息(包括信用卡信息)提交到 pacypay 直连支付接口  \r\n4. pacypay 提交支付信息至银行系统，将支付结果返回商户  \r\n5. 商户服务器处理返回的支付结果\r\n\r\n注：第 3 步—第 4 步为服务器提交数据，浏览器 URL 不会改变。"
+					},
+					"response": [
+						{
+							"name": "直连支付接口",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded; charset=utf-8"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "merchantNo",
+											"value": "12594",
+											"description": "[必须] 商户号",
+											"type": "text"
+										},
+										{
+											"key": "subAccount",
+											"value": "12594002",
+											"description": "[必须] 子账户",
+											"type": "text"
+										},
+										{
+											"key": "transactionId",
+											"value": "1001",
+											"description": "[必须] 商户订单号",
+											"type": "text"
+										},
+										{
+											"key": "amount",
+											"value": "2.50",
+											"description": "[必须] 【交易总金额】包括订单的其他所有金额之和.只能为数字。小数位数请参考附录：交易币种",
+											"type": "text"
+										},
+										{
+											"key": "currency",
+											"value": "USD",
+											"description": "[必须] 【交易币种】币种简称，具体详见附录:交易币种",
+											"type": "text"
+										},
+										{
+											"key": "discount",
+											"value": "-2",
+											"description": "【折扣】折扣默认为负值只能为数字,并且只限小数点后2位小数",
+											"type": "text"
+										},
+										{
+											"key": "products",
+											"value": "iphone#,#NUM1#,#230.00#,#1#;#ipad#,#NUM2#,#290.00#,#2",
+											"description": "[必须] 【货物详细信息】包括货物名称，ID，单价，数量具体详见附录：货物信息",
+											"type": "text"
+										},
+										{
+											"key": "notifyUrl",
+											"value": "taobao.com",
+											"description": "【异步返回地址】返回交易异步信息到商户网店",
+											"type": "text"
+										},
+										{
+											"key": "platform",
+											"value": "taobao.com",
+											"description": "平台",
+											"type": "text"
+										},
+										{
+											"key": "freightFee",
+											"value": "1.00",
+											"description": "【运费】只能为数字,并且只限小数点后2位小数",
+											"type": "text"
+										},
+										{
+											"key": "consumerId",
+											"value": "test",
+											"description": "[必须]  购物者的唯一ID",
+											"type": "text"
+										},
+										{
+											"key": "consumerLevel",
+											"value": "10",
+											"description": "购物者级别",
+											"type": "text"
+										},
+										{
+											"key": "token",
+											"value": "NO",
+											"description": "【一键支付】YES：需要一键支付NO：不需要一键支付此字段在使用TOKEN时为必填",
+											"type": "text"
+										},
+										{
+											"key": "transactionId",
+											"value": "iwoue2u390842u390",
+											"description": "【商户唯一键】商户唯一键值",
+											"type": "text"
+										},
+										{
+											"key": "payToken",
+											"value": "wer2u908u843",
+											"description": "【支付TOKEN】在使用TOKEN支付时需要传此参数注：支付TOKEN的有效期与信用卡的有效期一致，过期的TOKEN需要得新提交信用卡信息产生新的TOKEN来交易。支付TOKEN使用范例见附录：支付TOKEN使用示例",
+											"type": "text"
+										},
+										{
+											"key": "cardNumber",
+											"value": "4200000000000000",
+											"description": "[必须] 【卡号】说明：支付时信用卡的卡号注：此参数在参数支付Token有值的时不需要传值",
+											"type": "text"
+										},
+										{
+											"key": "month",
+											"value": "05",
+											"description": "[必须] 【信用卡有效月份】示例：05有效月份：大于等于当前月份注：此参数在参数支付Token有值的时不需要传值",
+											"type": "text"
+										},
+										{
+											"key": "year",
+											"value": "2020",
+											"description": "[必须] 【信用卡有效年份】示例：2020注：此参数在参数支付Token有值的时不需要传值",
+											"type": "text"
+										},
+										{
+											"key": "cvv",
+											"value": "534",
+											"description": "[必须] 【安全码】信用卡背面签名条一串数字的后3-4位注：此参数在使用Maestro卡或Token支付时不需要传值",
+											"type": "text"
+										},
+										{
+											"key": "issuingBank",
+											"value": "ICBC",
+											"description": "发卡银行",
+											"type": "text"
+										},
+										{
+											"key": "firstName",
+											"value": "zhang",
+											"description": "[必须] 【持卡人名】注：此参数在参数支付Token有值的时不需要传值",
+											"type": "text"
+										},
+										{
+											"key": "lastName",
+											"value": "san",
+											"description": "[必须] 【持卡人姓】注：此参数在参数支付Token有值的时不需要传值",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "test@126.com",
+											"description": "[必须] 持卡人电子邮件",
+											"type": "text"
+										},
+										{
+											"key": "transactionIp",
+											"value": "127.0.0.1",
+											"description": "[必须] 持卡人IP",
+											"type": "text"
+										},
+										{
+											"key": "phone",
+											"value": "18888888888",
+											"description": "【持卡人电话】需为8-9位纯数字实物交易时若买家国家为巴西，则此参数为必填",
+											"type": "text"
+										},
+										{
+											"key": "country",
+											"value": "CN",
+											"description": "持卡人国家",
+											"type": "text"
+										},
+										{
+											"key": "state",
+											"value": "guangdong",
+											"description": "持卡人所在州",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "shenzhen",
+											"description": "持卡人城市",
+											"type": "text"
+										},
+										{
+											"key": "address",
+											"value": "futian",
+											"description": "持卡人详细联系地址",
+											"type": "text"
+										},
+										{
+											"key": "zipCode",
+											"value": "518000",
+											"description": "持卡人邮政编码",
+											"type": "text"
+										},
+										{
+											"key": "operationSystem",
+											"value": "win10",
+											"description": "持卡人电脑操作系统",
+											"type": "text"
+										},
+										{
+											"key": "browerType",
+											"value": "firefox",
+											"description": "浏览器类型",
+											"type": "text"
+										},
+										{
+											"key": "browerLan",
+											"value": "zh-CN",
+											"description": "浏览器语言",
+											"type": "text"
+										},
+										{
+											"key": "timeZone",
+											"value": "+8",
+											"description": "时区",
+											"type": "text"
+										},
+										{
+											"key": "screenPixel",
+											"value": "1366*768",
+											"description": "屏幕分辨率",
+											"type": "text"
+										},
+										{
+											"key": "isPasteCard",
+											"value": "0",
+											"description": "卡号是否复制粘贴",
+											"type": "text"
+										},
+										{
+											"key": "newCookies",
+											"value": "",
+											"description": "新cookie值 组装示例：key1=val1&key2=val2",
+											"type": "text"
+										},
+										{
+											"key": "oldCookies",
+											"value": "",
+											"description": "旧cookie值 组装示例：key1=val1&key2=val2",
+											"type": "text"
+										},
+										{
+											"key": "transactionWebSite",
+											"value": "http://zhijie.zf",
+											"description": "[必须] 来源网站 即购物者的网站域名",
+											"type": "text"
+										},
+										{
+											"key": "personTaxId",
+											"value": "",
+											"description": "【个人税务登记号】巴西国家的税号，例如：“84461807231”CPF长14位对接巴西信用卡必须传此参数",
+											"type": "text"
+										},
+										{
+											"key": "areaCode",
+											"value": "",
+											"description": "【电话区号】例如：“11”对接巴西信用卡必须传此参数",
+											"type": "text"
+										},
+										{
+											"key": "birthday",
+											"value": "",
+											"description": "【生日】“YYYY-MM-DD”例如：“1988-11-01”对接巴西信用卡必须传此参数",
+											"type": "text"
+										},
+										{
+											"key": "tokenValue",
+											"value": "NO",
+											"description": "【巴西卡号Token】获取巴西卡号Token需要内嵌入APACPAY JS“payment.apacpay.min.js”，详见附录：获取巴西卡号Token示例对接巴西信用卡必须传此参数，若此值不为空允许CVV为空",
+											"type": "text"
+										},
+										{
+											"key": "installment",
+											"value": "",
+											"description": "【信用卡分期】2位数字，例如：2表示分两期目前只支持巴西信用卡，详见附录：获取信用卡分期示例",
+											"type": "text"
+										},
+										{
+											"key": "freightMethod",
+											"value": "xxx",
+											"description": "持卡人选择的发货方式名称",
+											"type": "text"
+										},
+										{
+											"key": "consigneeFirstName",
+											"value": "li",
+											"description": "收货人名",
+											"type": "text"
+										},
+										{
+											"key": "consigneeLastName",
+											"value": "si",
+											"description": "收货人姓",
+											"type": "text"
+										},
+										{
+											"key": "consigneeEmail",
+											"value": "test@126.com",
+											"description": "收货人邮箱",
+											"type": "text"
+										},
+										{
+											"key": "consigneePhone",
+											"value": "18666666666",
+											"description": "收货人电话",
+											"type": "text"
+										},
+										{
+											"key": "consigneeCountry",
+											"value": "US",
+											"description": "收货人国家",
+											"type": "text"
+										},
+										{
+											"key": "consigneeState",
+											"value": "NY",
+											"description": "收货人省份",
+											"type": "text"
+										},
+										{
+											"key": "consigneeCity",
+											"value": "NY",
+											"description": "收货人城市",
+											"type": "text"
+										},
+										{
+											"key": "consigneeAddress",
+											"value": "huaerjie",
+											"description": "收货人详细地址",
+											"type": "text"
+										},
+										{
+											"key": "consigneeZipCode",
+											"value": "55555",
+											"description": "收货人邮编",
+											"type": "text"
+										},
+										{
+											"key": "sign",
+											"value": "0F8D740B8CBE620731E28AF1E2F191B5611AE05B5DA2AC26A706C94DC5EF9AD8",
+											"description": "[必须] 【签名信息】明文加密结构: merNo + gatewayNo +orderNo + orderCurrency +orderAmount + firstName + lastName + cardNo + cardExpireYear  + cardExpireMonth+ cardSecurityCode + email + signkey加密后的签名要转换为大写，各语言加密方式不同，详见附录：加密方式",
+											"type": "text"
+										},
+										{
+											"key": "remark",
+											"value": "直连支付测试",
+											"description": "【说明】存放商户自己的信息，随订单传送到支付平台，返回内容与传输内容一致",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{hostname}}/ccpg/TPInterface",
+									"host": [
+										"{{hostname}}"
+									],
+									"path": [
+										"ccpg",
+										"TPInterface"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Length",
+									"value": "667"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 16 May 2020 02:35:13 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<respon><merchantNo>12594</merchantNo><subAccount>12594002</subAccount><transactionId>1001</transactionId><amount>2.50</amount><orderCurrency>USD</orderCurrency><cardNumber>420000***0000</cardNumber><tradeNo>3667116106880516096</tradeNo><orderStatus>1</orderStatus><orderInfo>0000:Success</orderInfo><payMethod>Credit Card</payMethod><returnType>2</returnType><billAddress></billAddress><sign>8ECC572ACE5CB93ADF74B613DF0636F156744B62B1EF8714BBCCECC56E91F293</sign><remark>直连支付测试</remark><payStatus>2000</payStatus><cvv2Reply></cvv2Reply><avsCode></avsCode><cardType>1</cardType><binCountry>US</binCountry></respon>\r\n"
+						}
+					]
+				},
+				{
+					"name": "直连支付接口-sandbox",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "c83b2db6-fd3d-4fd0-a4cb-d511e3627493",
+								"exec": [
+									"var signKey = 'XX5MG57n943227FQ75E5X9b6342uP7';\r",
+									"\r",
+									"let param = request.data;\r",
+									"let signstring = param[\"merchantNo\"] + param[\"subAccount\"] + param[\"transactionId\"] + param[\"currency\"] + param[\"amount\"] + param[\"firstName\"] + param[\"lastName\"] + param[\"cardNumber\"] + param[\"year\"] + param[\"month\"] + param[\"cvv\"] + param[\"email\"] + signKey;\r",
+									"\r",
+									"pm.environment.set(\"sign\", CryptoJS.SHA256(signstring).toString());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded; charset=utf-8"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "merchantNo",
+									"value": "21636",
+									"description": "[必须] 商户号",
+									"type": "text"
+								},
+								{
+									"key": "subAccount",
+									"value": "21636001",
+									"description": "[必须] 子账户",
+									"type": "text"
+								},
+								{
+									"key": "transactionId",
+									"value": "200702103",
+									"type": "text"
+								},
+								{
+									"key": "amount",
+									"value": "12.8",
+									"description": "[必须] 【交易总金额】包括订单的其他所有金额之和.只能为数字。小数位数请参考附录：交易币种",
+									"type": "text"
+								},
+								{
+									"key": "currency",
+									"value": "USD",
+									"description": "[必须] 【交易币种】币种简称，具体详见附录:交易币种",
+									"type": "text"
+								},
+								{
+									"key": "discount",
+									"value": "-1.8",
+									"description": "【折扣】折扣默认为负值只能为数字,并且只限小数点后2位小数",
+									"type": "text"
+								},
+								{
+									"key": "products",
+									"value": "iphone#,#NUM1#,#230.00#,#1#;#ipad#,#NUM2#,#290.00#,#2",
+									"description": "[必须] 【货物详细信息】包括货物名称，ID，单价，数量具体详见附录：货物信息",
+									"type": "text"
+								},
+								{
+									"key": "notifyUrl",
+									"value": "http://9uz3rhby.vaiwan.com/notify",
+									"description": "【异步返回地址】返回交易异步信息到商户网店",
+									"type": "text"
+								},
+								{
+									"key": "platform",
+									"value": "taobao.com",
+									"description": "平台",
+									"type": "text"
+								},
+								{
+									"key": "freightFee",
+									"value": "2.32",
+									"description": "【运费】只能为数字,并且只限小数点后2位小数",
+									"type": "text"
+								},
+								{
+									"key": "consumerId",
+									"value": "testShop",
+									"description": "[必须]  购物者的唯一ID",
+									"type": "text"
+								},
+								{
+									"key": "consumerLevel",
+									"value": "VIP",
+									"description": "购物者级别",
+									"type": "text"
+								},
+								{
+									"key": "token",
+									"value": "",
+									"description": "【一键支付】YES：需要一键支付NO：不需要一键支付此字段在使用TOKEN时为必填",
+									"type": "text"
+								},
+								{
+									"key": "merchantBizId",
+									"value": "",
+									"description": "【商户唯一键】商户唯一键值",
+									"type": "text"
+								},
+								{
+									"key": "payToken",
+									"value": "",
+									"description": "【支付TOKEN】在使用TOKEN支付时需要传此参数注：支付TOKEN的有效期与信用卡的有效期一致，过期的TOKEN需要得新提交信用卡信息产生新的TOKEN来交易。支付TOKEN使用范例见附录：支付TOKEN使用示例",
+									"type": "text"
+								},
+								{
+									"key": "cardNumber",
+									"value": "4012000000060085",
+									"description": "[必须] 【卡号】说明：支付时信用卡的卡号注：此参数在参数支付Token有值的时不需要传值",
+									"type": "text"
+								},
+								{
+									"key": "sign",
+									"value": "{{sign}}",
+									"description": "[必须] 【签名信息】明文加密结构: merNo + gatewayNo +orderNo + orderCurrency +orderAmount + firstName + lastName + cardNo + cardExpireYear  + cardExpireMonth+ cardSecurityCode + email + signkey加密后的签名要转换为大写，各语言加密方式不同，详见附录：加密方式",
+									"type": "text"
+								},
+								{
+									"key": "month",
+									"value": "12",
+									"description": "[必须] 【信用卡有效月份】示例：05有效月份：大于等于当前月份注：此参数在参数支付Token有值的时不需要传值",
+									"type": "text"
+								},
+								{
+									"key": "year",
+									"value": "2023",
+									"description": "[必须] 【信用卡有效年份】示例：2020注：此参数在参数支付Token有值的时不需要传值",
+									"type": "text"
+								},
+								{
+									"key": "cvv",
+									"value": "835",
+									"description": "[必须] 【安全码】信用卡背面签名条一串数字的后3-4位注：此参数在使用Maestro卡或Token支付时不需要传值",
+									"type": "text"
+								},
+								{
+									"key": "issuingBank",
+									"value": "123WPLH123",
+									"description": "发卡银行",
+									"type": "text"
+								},
+								{
+									"key": "firstName",
+									"value": "Travis",
+									"description": "[必须] 【持卡人名】注：此参数在参数支付Token有值的时不需要传值",
+									"type": "text"
+								},
+								{
+									"key": "lastName",
+									"value": "Pastrana",
+									"description": "[必须] 【持卡人姓】注：此参数在参数支付Token有值的时不需要传值",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "13917172679@163.com",
+									"description": "[必须] 持卡人电子邮件",
+									"type": "text"
+								},
+								{
+									"key": "transactionIp",
+									"value": "245.253.2.12",
+									"description": "[必须] 持卡人IP",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "+1987987987987",
+									"description": "【持卡人电话】需为8-9位纯数字实物交易时若买家国家为巴西，则此参数为必填",
+									"type": "text"
+								},
+								{
+									"key": "country",
+									"value": "CN",
+									"description": "持卡人国家",
+									"type": "text"
+								},
+								{
+									"key": "state",
+									"value": "guangdong",
+									"description": "持卡人所在州",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "shenzhen",
+									"description": "持卡人城市",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "futian",
+									"description": "持卡人详细联系地址",
+									"type": "text"
+								},
+								{
+									"key": "zipCode",
+									"value": "518000",
+									"description": "持卡人邮政编码",
+									"type": "text"
+								},
+								{
+									"key": "operationSystem",
+									"value": "Win10",
+									"description": "持卡人电脑操作系统",
+									"type": "text"
+								},
+								{
+									"key": "browerType",
+									"value": "Mozilla/5.0 (Windows NT 10.0; WOW64)",
+									"description": "浏览器类型",
+									"type": "text"
+								},
+								{
+									"key": "browerLan",
+									"value": "en-US",
+									"description": "浏览器语言",
+									"type": "text"
+								},
+								{
+									"key": "timeZone",
+									"value": "0",
+									"description": "时区",
+									"type": "text"
+								},
+								{
+									"key": "screenPixel",
+									"value": "1600x900",
+									"description": "屏幕分辨率",
+									"type": "text"
+								},
+								{
+									"key": "isPasteCard",
+									"value": "0",
+									"description": "卡号是否复制粘贴",
+									"type": "text"
+								},
+								{
+									"key": "newCookies",
+									"value": "billCountry=UK",
+									"description": "新cookie值 组装示例：key1=val1&key2=val2",
+									"type": "text"
+								},
+								{
+									"key": "oldCookies",
+									"value": "",
+									"description": "旧cookie值 组装示例：key1=val1&key2=val2",
+									"type": "text"
+								},
+								{
+									"key": "transactionWebSite",
+									"value": "https://dev-opencart2.ronhan.com/",
+									"description": "[必须] 来源网站 即购物者的网站域名",
+									"type": "text"
+								},
+								{
+									"key": "personTaxId",
+									"value": "",
+									"description": "【个人税务登记号】巴西国家的税号，例如：“84461807231”CPF长14位对接巴西信用卡必须传此参数",
+									"type": "text"
+								},
+								{
+									"key": "areaCode",
+									"value": "",
+									"description": "【电话区号】例如：“11”对接巴西信用卡必须传此参数",
+									"type": "text"
+								},
+								{
+									"key": "birthday",
+									"value": "",
+									"description": "【生日】“YYYY-MM-DD”例如：“1988-11-01”对接巴西信用卡必须传此参数",
+									"type": "text"
+								},
+								{
+									"key": "tokenValue",
+									"value": "",
+									"description": "【巴西卡号Token】获取巴西卡号Token需要内嵌入APACPAY JS“payment.apacpay.min.js”，详见附录：获取巴西卡号Token示例对接巴西信用卡必须传此参数，若此值不为空允许CVV为空",
+									"type": "text"
+								},
+								{
+									"key": "installment",
+									"value": "",
+									"description": "【信用卡分期】2位数字，例如：2表示分两期目前只支持巴西信用卡，详见附录：获取信用卡分期示例",
+									"type": "text"
+								},
+								{
+									"key": "freightMethod",
+									"value": "xxx",
+									"description": "持卡人选择的发货方式名称",
+									"type": "text"
+								},
+								{
+									"key": "consigneeFirstName",
+									"value": "li",
+									"description": "收货人名",
+									"type": "text"
+								},
+								{
+									"key": "consigneeLastName",
+									"value": "si",
+									"description": "收货人姓",
+									"type": "text"
+								},
+								{
+									"key": "consigneeEmail",
+									"value": "test@126.com",
+									"description": "收货人邮箱",
+									"type": "text"
+								},
+								{
+									"key": "consigneePhone",
+									"value": "18666666666",
+									"description": "收货人电话",
+									"type": "text"
+								},
+								{
+									"key": "consigneeCountry",
+									"value": "US",
+									"description": "收货人国家",
+									"type": "text"
+								},
+								{
+									"key": "consigneeState",
+									"value": "NY",
+									"description": "收货人省份",
+									"type": "text"
+								},
+								{
+									"key": "consigneeCity",
+									"value": "NY",
+									"description": "收货人城市",
+									"type": "text"
+								},
+								{
+									"key": "consigneeAddress",
+									"value": "huaerjie",
+									"description": "收货人详细地址",
+									"type": "text"
+								},
+								{
+									"key": "consigneeZipCode",
+									"value": "55555",
+									"description": "收货人邮编",
+									"type": "text"
+								},
+								{
+									"key": "remark",
+									"value": "直连支付测试",
+									"description": "【说明】存放商户自己的信息，随订单传送到支付平台，返回内容与传输内容一致",
+									"type": "text"
+								},
+								{
+									"key": "setResult",
+									"value": "0",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "isOpen3D",
+									"value": "do3DS",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "https://sandbox-v2.pacypay.com/gateway/TPInterface",
+							"protocol": "https",
+							"host": [
+								"sandbox-v2",
+								"pacypay",
+								"com"
+							],
+							"path": [
+								"gateway",
+								"TPInterface"
+							]
+						},
+						"description": "该接口支付采用服务器端对接，即 Server-To-Server 模式，具体流程如下：  \r\n1. 网店下订单  \r\n2. 商户支付页面收集支付卡信息  \r\n3. 把订单信息(包括信用卡信息)提交到 pacypay 直连支付接口  \r\n4. pacypay 提交支付信息至银行系统，将支付结果返回商户  \r\n5. 商户服务器处理返回的支付结果\r\n\r\n注：第 3 步—第 4 步为服务器提交数据，浏览器 URL 不会改变。"
+					},
+					"response": [
+						{
+							"name": "直连支付接口",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded; charset=utf-8"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "merchantNo",
+											"value": "12594",
+											"description": "[必须] 商户号",
+											"type": "text"
+										},
+										{
+											"key": "subAccount",
+											"value": "12594002",
+											"description": "[必须] 子账户",
+											"type": "text"
+										},
+										{
+											"key": "transactionId",
+											"value": "1001",
+											"description": "[必须] 商户订单号",
+											"type": "text"
+										},
+										{
+											"key": "amount",
+											"value": "2.50",
+											"description": "[必须] 【交易总金额】包括订单的其他所有金额之和.只能为数字。小数位数请参考附录：交易币种",
+											"type": "text"
+										},
+										{
+											"key": "currency",
+											"value": "USD",
+											"description": "[必须] 【交易币种】币种简称，具体详见附录:交易币种",
+											"type": "text"
+										},
+										{
+											"key": "discount",
+											"value": "-2",
+											"description": "【折扣】折扣默认为负值只能为数字,并且只限小数点后2位小数",
+											"type": "text"
+										},
+										{
+											"key": "products",
+											"value": "iphone#,#NUM1#,#230.00#,#1#;#ipad#,#NUM2#,#290.00#,#2",
+											"description": "[必须] 【货物详细信息】包括货物名称，ID，单价，数量具体详见附录：货物信息",
+											"type": "text"
+										},
+										{
+											"key": "notifyUrl",
+											"value": "taobao.com",
+											"description": "【异步返回地址】返回交易异步信息到商户网店",
+											"type": "text"
+										},
+										{
+											"key": "platform",
+											"value": "taobao.com",
+											"description": "平台",
+											"type": "text"
+										},
+										{
+											"key": "freightFee",
+											"value": "1.00",
+											"description": "【运费】只能为数字,并且只限小数点后2位小数",
+											"type": "text"
+										},
+										{
+											"key": "consumerId",
+											"value": "test",
+											"description": "[必须]  购物者的唯一ID",
+											"type": "text"
+										},
+										{
+											"key": "consumerLevel",
+											"value": "10",
+											"description": "购物者级别",
+											"type": "text"
+										},
+										{
+											"key": "token",
+											"value": "NO",
+											"description": "【一键支付】YES：需要一键支付NO：不需要一键支付此字段在使用TOKEN时为必填",
+											"type": "text"
+										},
+										{
+											"key": "transactionId",
+											"value": "iwoue2u390842u390",
+											"description": "【商户唯一键】商户唯一键值",
+											"type": "text"
+										},
+										{
+											"key": "payToken",
+											"value": "wer2u908u843",
+											"description": "【支付TOKEN】在使用TOKEN支付时需要传此参数注：支付TOKEN的有效期与信用卡的有效期一致，过期的TOKEN需要得新提交信用卡信息产生新的TOKEN来交易。支付TOKEN使用范例见附录：支付TOKEN使用示例",
+											"type": "text"
+										},
+										{
+											"key": "cardNumber",
+											"value": "4200000000000000",
+											"description": "[必须] 【卡号】说明：支付时信用卡的卡号注：此参数在参数支付Token有值的时不需要传值",
+											"type": "text"
+										},
+										{
+											"key": "month",
+											"value": "05",
+											"description": "[必须] 【信用卡有效月份】示例：05有效月份：大于等于当前月份注：此参数在参数支付Token有值的时不需要传值",
+											"type": "text"
+										},
+										{
+											"key": "year",
+											"value": "2020",
+											"description": "[必须] 【信用卡有效年份】示例：2020注：此参数在参数支付Token有值的时不需要传值",
+											"type": "text"
+										},
+										{
+											"key": "cvv",
+											"value": "534",
+											"description": "[必须] 【安全码】信用卡背面签名条一串数字的后3-4位注：此参数在使用Maestro卡或Token支付时不需要传值",
+											"type": "text"
+										},
+										{
+											"key": "issuingBank",
+											"value": "ICBC",
+											"description": "发卡银行",
+											"type": "text"
+										},
+										{
+											"key": "firstName",
+											"value": "zhang",
+											"description": "[必须] 【持卡人名】注：此参数在参数支付Token有值的时不需要传值",
+											"type": "text"
+										},
+										{
+											"key": "lastName",
+											"value": "san",
+											"description": "[必须] 【持卡人姓】注：此参数在参数支付Token有值的时不需要传值",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "test@126.com",
+											"description": "[必须] 持卡人电子邮件",
+											"type": "text"
+										},
+										{
+											"key": "transactionIp",
+											"value": "127.0.0.1",
+											"description": "[必须] 持卡人IP",
+											"type": "text"
+										},
+										{
+											"key": "phone",
+											"value": "18888888888",
+											"description": "【持卡人电话】需为8-9位纯数字实物交易时若买家国家为巴西，则此参数为必填",
+											"type": "text"
+										},
+										{
+											"key": "country",
+											"value": "CN",
+											"description": "持卡人国家",
+											"type": "text"
+										},
+										{
+											"key": "state",
+											"value": "guangdong",
+											"description": "持卡人所在州",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "shenzhen",
+											"description": "持卡人城市",
+											"type": "text"
+										},
+										{
+											"key": "address",
+											"value": "futian",
+											"description": "持卡人详细联系地址",
+											"type": "text"
+										},
+										{
+											"key": "zipCode",
+											"value": "518000",
+											"description": "持卡人邮政编码",
+											"type": "text"
+										},
+										{
+											"key": "operationSystem",
+											"value": "win10",
+											"description": "持卡人电脑操作系统",
+											"type": "text"
+										},
+										{
+											"key": "browerType",
+											"value": "firefox",
+											"description": "浏览器类型",
+											"type": "text"
+										},
+										{
+											"key": "browerLan",
+											"value": "zh-CN",
+											"description": "浏览器语言",
+											"type": "text"
+										},
+										{
+											"key": "timeZone",
+											"value": "+8",
+											"description": "时区",
+											"type": "text"
+										},
+										{
+											"key": "screenPixel",
+											"value": "1366*768",
+											"description": "屏幕分辨率",
+											"type": "text"
+										},
+										{
+											"key": "isPasteCard",
+											"value": "0",
+											"description": "卡号是否复制粘贴",
+											"type": "text"
+										},
+										{
+											"key": "newCookies",
+											"value": "",
+											"description": "新cookie值 组装示例：key1=val1&key2=val2",
+											"type": "text"
+										},
+										{
+											"key": "oldCookies",
+											"value": "",
+											"description": "旧cookie值 组装示例：key1=val1&key2=val2",
+											"type": "text"
+										},
+										{
+											"key": "transactionWebSite",
+											"value": "http://zhijie.zf",
+											"description": "[必须] 来源网站 即购物者的网站域名",
+											"type": "text"
+										},
+										{
+											"key": "personTaxId",
+											"value": "",
+											"description": "【个人税务登记号】巴西国家的税号，例如：“84461807231”CPF长14位对接巴西信用卡必须传此参数",
+											"type": "text"
+										},
+										{
+											"key": "areaCode",
+											"value": "",
+											"description": "【电话区号】例如：“11”对接巴西信用卡必须传此参数",
+											"type": "text"
+										},
+										{
+											"key": "birthday",
+											"value": "",
+											"description": "【生日】“YYYY-MM-DD”例如：“1988-11-01”对接巴西信用卡必须传此参数",
+											"type": "text"
+										},
+										{
+											"key": "tokenValue",
+											"value": "NO",
+											"description": "【巴西卡号Token】获取巴西卡号Token需要内嵌入APACPAY JS“payment.apacpay.min.js”，详见附录：获取巴西卡号Token示例对接巴西信用卡必须传此参数，若此值不为空允许CVV为空",
+											"type": "text"
+										},
+										{
+											"key": "installment",
+											"value": "",
+											"description": "【信用卡分期】2位数字，例如：2表示分两期目前只支持巴西信用卡，详见附录：获取信用卡分期示例",
+											"type": "text"
+										},
+										{
+											"key": "freightMethod",
+											"value": "xxx",
+											"description": "持卡人选择的发货方式名称",
+											"type": "text"
+										},
+										{
+											"key": "consigneeFirstName",
+											"value": "li",
+											"description": "收货人名",
+											"type": "text"
+										},
+										{
+											"key": "consigneeLastName",
+											"value": "si",
+											"description": "收货人姓",
+											"type": "text"
+										},
+										{
+											"key": "consigneeEmail",
+											"value": "test@126.com",
+											"description": "收货人邮箱",
+											"type": "text"
+										},
+										{
+											"key": "consigneePhone",
+											"value": "18666666666",
+											"description": "收货人电话",
+											"type": "text"
+										},
+										{
+											"key": "consigneeCountry",
+											"value": "US",
+											"description": "收货人国家",
+											"type": "text"
+										},
+										{
+											"key": "consigneeState",
+											"value": "NY",
+											"description": "收货人省份",
+											"type": "text"
+										},
+										{
+											"key": "consigneeCity",
+											"value": "NY",
+											"description": "收货人城市",
+											"type": "text"
+										},
+										{
+											"key": "consigneeAddress",
+											"value": "huaerjie",
+											"description": "收货人详细地址",
+											"type": "text"
+										},
+										{
+											"key": "consigneeZipCode",
+											"value": "55555",
+											"description": "收货人邮编",
+											"type": "text"
+										},
+										{
+											"key": "sign",
+											"value": "0F8D740B8CBE620731E28AF1E2F191B5611AE05B5DA2AC26A706C94DC5EF9AD8",
+											"description": "[必须] 【签名信息】明文加密结构: merNo + gatewayNo +orderNo + orderCurrency +orderAmount + firstName + lastName + cardNo + cardExpireYear  + cardExpireMonth+ cardSecurityCode + email + signkey加密后的签名要转换为大写，各语言加密方式不同，详见附录：加密方式",
+											"type": "text"
+										},
+										{
+											"key": "remark",
+											"value": "直连支付测试",
+											"description": "【说明】存放商户自己的信息，随订单传送到支付平台，返回内容与传输内容一致",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{hostname}}/ccpg/TPInterface",
+									"host": [
+										"{{hostname}}"
+									],
+									"path": [
+										"ccpg",
+										"TPInterface"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Length",
+									"value": "667"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 16 May 2020 02:35:13 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<respon><merchantNo>12594</merchantNo><subAccount>12594002</subAccount><transactionId>1001</transactionId><amount>2.50</amount><orderCurrency>USD</orderCurrency><cardNumber>420000***0000</cardNumber><tradeNo>3667116106880516096</tradeNo><orderStatus>1</orderStatus><orderInfo>0000:Success</orderInfo><payMethod>Credit Card</payMethod><returnType>2</returnType><billAddress></billAddress><sign>8ECC572ACE5CB93ADF74B613DF0636F156744B62B1EF8714BBCCECC56E91F293</sign><remark>直连支付测试</remark><payStatus>2000</payStatus><cvv2Reply></cvv2Reply><avsCode></avsCode><cardType>1</cardType><binCountry>US</binCountry></respon>\r\n"
+						}
+					]
+				},
+				{
+					"name": "直连支付接口",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "a593efa3-044e-43a8-8e92-e1ed0bb6e624",
+								"exec": [
+									"var signKey = '2tp584Mu8D4kp335F4Jl611sVI8SF9';\r",
+									"\r",
+									"let param = request.data;\r",
+									"let signstring = param[\"merchantNo\"] + param[\"subAccount\"] + param[\"transactionId\"] + param[\"currency\"] + param[\"amount\"] + param[\"firstName\"] + param[\"lastName\"] + param[\"cardNumber\"] + param[\"year\"] + param[\"month\"] + param[\"cvv\"] + param[\"email\"] + signKey;\r",
+									"\r",
+									"pm.environment.set(\"sign\", CryptoJS.SHA256(signstring).toString());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded; charset=utf-8"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "merchantNo",
+									"value": "12594",
+									"description": "[必须] 商户号",
+									"type": "text"
+								},
+								{
+									"key": "subAccount",
+									"value": "12594003",
+									"description": "[必须] 子账户",
+									"type": "text"
+								},
+								{
+									"key": "transactionId",
+									"value": "200707002",
+									"description": "[必须] 商户订单号",
+									"type": "text"
+								},
+								{
+									"key": "amount",
+									"value": "3",
+									"description": "[必须] 【交易总金额】包括订单的其他所有金额之和.只能为数字。小数位数请参考附录：交易币种",
+									"type": "text"
+								},
+								{
+									"key": "currency",
+									"value": "USD",
+									"description": "[必须] 【交易币种】币种简称，具体详见附录:交易币种",
+									"type": "text"
+								},
+								{
+									"key": "discount",
+									"value": "-2",
+									"description": "【折扣】折扣默认为负值只能为数字,并且只限小数点后2位小数",
+									"type": "text"
+								},
+								{
+									"key": "products",
+									"value": "HUAWEI/华为Mate30 5G手机#,#1#,#1#,#1#;#华为Mate30透明硅胶软壳#,#2#,#1#,#2",
+									"description": "[必须] 【货物详细信息】包括货物名称，ID，单价，数量具体详见附录：货物信息",
+									"type": "text"
+								},
+								{
+									"key": "notifyUrl",
+									"value": "http://9uz3rhby.vaiwan.com/notify?a=b&c=d",
+									"description": "【异步返回地址】返回交易异步信息到商户网店",
+									"type": "text"
+								},
+								{
+									"key": "platform",
+									"value": "taobao",
+									"description": "平台",
+									"type": "text"
+								},
+								{
+									"key": "freightFee",
+									"value": "1.00",
+									"description": "【运费】只能为数字,并且只限小数点后2位小数",
+									"type": "text"
+								},
+								{
+									"key": "consumerId",
+									"value": "ergou.wang",
+									"description": "[必须]  购物者的唯一ID",
+									"type": "text"
+								},
+								{
+									"key": "consumerLevel",
+									"value": "10",
+									"description": "购物者级别",
+									"type": "text"
+								},
+								{
+									"key": "token",
+									"value": "NO",
+									"description": "【一键支付】YES：需要一键支付NO：不需要一键支付此字段在使用TOKEN时为必填",
+									"type": "text"
+								},
+								{
+									"key": "merchantBizId",
+									"value": "i200630001",
+									"description": "【商户唯一键】商户唯一键值",
+									"type": "text"
+								},
+								{
+									"key": "payToken",
+									"value": "",
+									"description": "【支付TOKEN】在使用TOKEN支付时需要传此参数注：支付TOKEN的有效期与信用卡的有效期一致，过期的TOKEN需要得新提交信用卡信息产生新的TOKEN来交易。支付TOKEN使用范例见附录：支付TOKEN使用示例",
+									"type": "text"
+								},
+								{
+									"key": "cardNumber",
+									"value": "4200000000000000",
+									"description": "[必须] 【卡号】说明：支付时信用卡的卡号注：此参数在参数支付Token有值的时不需要传值",
+									"type": "text"
+								},
+								{
+									"key": "month",
+									"value": "09",
+									"description": "[必须] 【信用卡有效月份】示例：05有效月份：大于等于当前月份注：此参数在参数支付Token有值的时不需要传值",
+									"type": "text"
+								},
+								{
+									"key": "year",
+									"value": "2020",
+									"description": "[必须] 【信用卡有效年份】示例：2020注：此参数在参数支付Token有值的时不需要传值",
+									"type": "text"
+								},
+								{
+									"key": "cvv",
+									"value": "534",
+									"description": "[必须] 【安全码】信用卡背面签名条一串数字的后3-4位注：此参数在使用Maestro卡或Token支付时不需要传值",
+									"type": "text"
+								},
+								{
+									"key": "issuingBank",
+									"value": "ICBC",
+									"description": "发卡银行",
+									"type": "text"
+								},
+								{
+									"key": "firstName",
+									"value": "ergou",
+									"description": "[必须] 【持卡人名】注：此参数在参数支付Token有值的时不需要传值",
+									"type": "text"
+								},
+								{
+									"key": "lastName",
+									"value": "wang",
+									"description": "[必须] 【持卡人姓】注：此参数在参数支付Token有值的时不需要传值",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "test@126.com",
+									"description": "[必须] 持卡人电子邮件",
+									"type": "text"
+								},
+								{
+									"key": "transactionIp",
+									"value": "127.0.0.1",
+									"description": "[必须] 持卡人IP",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "18888888888",
+									"description": "【持卡人电话】需为8-9位纯数字实物交易时若买家国家为巴西，则此参数为必填",
+									"type": "text"
+								},
+								{
+									"key": "country",
+									"value": "CN",
+									"description": "持卡人国家",
+									"type": "text"
+								},
+								{
+									"key": "state",
+									"value": "guangdong",
+									"description": "持卡人所在州",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "shenzhen",
+									"description": "持卡人城市",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "futian",
+									"description": "持卡人详细联系地址",
+									"type": "text"
+								},
+								{
+									"key": "zipCode",
+									"value": "518000",
+									"description": "持卡人邮政编码",
+									"type": "text"
+								},
+								{
+									"key": "operationSystem",
+									"value": "win10",
+									"description": "持卡人电脑操作系统",
+									"type": "text"
+								},
+								{
+									"key": "browerType",
+									"value": "firefox",
+									"description": "浏览器类型",
+									"type": "text"
+								},
+								{
+									"key": "browerLan",
+									"value": "zh-CN",
+									"description": "浏览器语言",
+									"type": "text"
+								},
+								{
+									"key": "timeZone",
+									"value": "+8",
+									"description": "时区",
+									"type": "text"
+								},
+								{
+									"key": "screenPixel",
+									"value": "1366*768",
+									"description": "屏幕分辨率",
+									"type": "text"
+								},
+								{
+									"key": "isPasteCard",
+									"value": "0",
+									"description": "卡号是否复制粘贴",
+									"type": "text"
+								},
+								{
+									"key": "newCookies",
+									"value": "",
+									"description": "新cookie值 组装示例：key1=val1&key2=val2",
+									"type": "text"
+								},
+								{
+									"key": "oldCookies",
+									"value": "",
+									"description": "旧cookie值 组装示例：key1=val1&key2=val2",
+									"type": "text"
+								},
+								{
+									"key": "transactionWebSite",
+									"value": "http://zhijie.zf",
+									"description": "[必须] 来源网站 即购物者的网站域名",
+									"type": "text"
+								},
+								{
+									"key": "personTaxId",
+									"value": "",
+									"description": "【个人税务登记号】巴西国家的税号，例如：“84461807231”CPF长14位对接巴西信用卡必须传此参数",
+									"type": "text"
+								},
+								{
+									"key": "areaCode",
+									"value": "",
+									"description": "【电话区号】例如：“11”对接巴西信用卡必须传此参数",
+									"type": "text"
+								},
+								{
+									"key": "birthday",
+									"value": "",
+									"description": "【生日】“YYYY-MM-DD”例如：“1988-11-01”对接巴西信用卡必须传此参数",
+									"type": "text"
+								},
+								{
+									"key": "tokenValue",
+									"value": "YES",
+									"description": "【巴西卡号Token】获取巴西卡号Token需要内嵌入APACPAY JS“payment.apacpay.min.js”，详见附录：获取巴西卡号Token示例对接巴西信用卡必须传此参数，若此值不为空允许CVV为空",
+									"type": "text"
+								},
+								{
+									"key": "installment",
+									"value": "",
+									"description": "【信用卡分期】2位数字，例如：2表示分两期目前只支持巴西信用卡，详见附录：获取信用卡分期示例",
+									"type": "text"
+								},
+								{
+									"key": "freightMethod",
+									"value": "xxx",
+									"description": "持卡人选择的发货方式名称",
+									"type": "text"
+								},
+								{
+									"key": "consigneeFirstName",
+									"value": "li",
+									"description": "收货人名",
+									"type": "text"
+								},
+								{
+									"key": "consigneeLastName",
+									"value": "si",
+									"description": "收货人姓",
+									"type": "text"
+								},
+								{
+									"key": "consigneeEmail",
+									"value": "test@126.com",
+									"description": "收货人邮箱",
+									"type": "text"
+								},
+								{
+									"key": "consigneePhone",
+									"value": "18666666666",
+									"description": "收货人电话",
+									"type": "text"
+								},
+								{
+									"key": "consigneeCountry",
+									"value": "US",
+									"description": "收货人国家",
+									"type": "text"
+								},
+								{
+									"key": "consigneeState",
+									"value": "NY",
+									"description": "收货人省份",
+									"type": "text"
+								},
+								{
+									"key": "consigneeCity",
+									"value": "NY",
+									"description": "收货人城市",
+									"type": "text"
+								},
+								{
+									"key": "consigneeAddress",
+									"value": "huaerjie",
+									"description": "收货人详细地址",
+									"type": "text"
+								},
+								{
+									"key": "consigneeZipCode",
+									"value": "55555",
+									"description": "收货人邮编",
+									"type": "text"
+								},
+								{
+									"key": "sign",
+									"value": "{{sign}}",
+									"description": "[必须] 【签名信息】明文加密结构: merNo + gatewayNo +orderNo + orderCurrency +orderAmount + firstName + lastName + cardNo + cardExpireYear  + cardExpireMonth+ cardSecurityCode + email + signkey加密后的签名要转换为大写，各语言加密方式不同，详见附录：加密方式",
+									"type": "text"
+								},
+								{
+									"key": "remark",
+									"value": "直连支付测试",
+									"description": "【说明】存放商户自己的信息，随订单传送到支付平台，返回内容与传输内容一致",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:9000/gateway/TPInterface",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"gateway",
+								"TPInterface"
+							]
+						},
+						"description": "该接口支付采用服务器端对接，即 Server-To-Server 模式，具体流程如下：  \r\n1. 网店下订单  \r\n2. 商户支付页面收集支付卡信息  \r\n3. 把订单信息(包括信用卡信息)提交到 pacypay 直连支付接口  \r\n4. pacypay 提交支付信息至银行系统，将支付结果返回商户  \r\n5. 商户服务器处理返回的支付结果\r\n\r\n注：第 3 步—第 4 步为服务器提交数据，浏览器 URL 不会改变。"
+					},
+					"response": []
+				},
+				{
+					"name": "跳转支付接口",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded; charset=utf-8"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "merchantNo",
+									"value": "",
+									"description": "[必须] 商户号",
+									"type": "text"
+								},
+								{
+									"key": "subAccount",
+									"value": "",
+									"description": "[必须] 子账户",
+									"type": "text"
+								},
+								{
+									"key": "transactionId",
+									"value": "",
+									"description": "[必须] 商户订单号",
+									"type": "text"
+								},
+								{
+									"key": "amount",
+									"value": "",
+									"description": "[必须] 交易总金额 包括订单的其他所有金额之和，只能为数字。小数位数请参考附录：交易币种",
+									"type": "text"
+								},
+								{
+									"key": "currency",
+									"value": "",
+									"description": "[必须] 交易币种 币种简称，具体详见附录：交易币种",
+									"type": "text"
+								},
+								{
+									"key": "sign",
+									"value": "",
+									"description": "[必须] 【签名信息】明文加密结构: merNo + gatewayNo + orderNo + orderCurrency+orderAmount + returnUrl+ signkey;加密后的签名要转换为大写",
+									"type": "text"
+								},
+								{
+									"key": "returnUrl",
+									"value": "",
+									"description": "[必须] 【实时返回地址】返回交易实时信息到商户网店",
+									"type": "text"
+								},
+								{
+									"key": "notifyUrl",
+									"value": "",
+									"description": "[必须] 【异步返回地址】通知回调地址",
+									"type": "text"
+								},
+								{
+									"key": "cancelUrl",
+									"value": "",
+									"description": "取消交易时的跳转地址",
+									"type": "text"
+								},
+								{
+									"key": "consumerId",
+									"value": "",
+									"description": "[必须] 购物者的唯一ID",
+									"type": "text"
+								},
+								{
+									"key": "platform",
+									"value": "",
+									"description": "平台",
+									"type": "text"
+								},
+								{
+									"key": "consumerLevel",
+									"value": "",
+									"description": "购物者级别",
+									"type": "text"
+								},
+								{
+									"key": "token",
+									"value": "",
+									"description": "【一键支付】YES：需要一键支付；NO：不需要一键支付。此字段只使用在需要支付TOKEN传入",
+									"type": "text"
+								},
+								{
+									"key": "cardType",
+									"value": "",
+									"description": "卡类型 1: Visa2: Master3: JCB4: AE5: Diners6: Maestro",
+									"type": "text"
+								},
+								{
+									"key": "defaultLang",
+									"value": "",
+									"description": "【默认语言】没有指定的话，默认用浏览器的语言 \nen_US --英语\nzh_HK --中国香港\nzh_CN --中国\nde_DE --德国\nja_JP -- 日本\nes_ES -- 西班牙\nko_KR -- 韩国\nfr_FR -- 法国\nit_IT -- 意大利\nru_RU -- 俄罗斯\nen_ID -- 印度尼西亚\nvi_VN -- 越南\nth_TH -- 泰国\nms -- 马来西亚\nar_AE -- 阿拉伯\nsv_SE -- 瑞典\ntr_TR -- 土耳其\nnl_NL -- 荷兰\npt_PT -- 葡萄牙\nel_GR -- 希腊\npl_PL -- 波兰\n",
+									"type": "text"
+								},
+								{
+									"key": "products",
+									"value": "",
+									"description": "【货物详细信息】包括货物名称，ID，单价，数量 具体详见附录：货物信息",
+									"type": "text"
+								},
+								{
+									"key": "remark",
+									"value": "",
+									"description": "订单备注信息",
+									"type": "text"
+								},
+								{
+									"key": "merchantLogoNo",
+									"value": "",
+									"description": "【logo序号】数字，如：1，2，3... 表示使用定制序号的Logo",
+									"type": "text"
+								},
+								{
+									"key": "merchantBizId",
+									"value": "",
+									"description": "商户唯一键值",
+									"type": "text"
+								},
+								{
+									"key": "firstName",
+									"value": "",
+									"description": "持卡人的名",
+									"type": "text"
+								},
+								{
+									"key": "lastName",
+									"value": "",
+									"description": "持卡人的姓",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "",
+									"description": "持卡人的账单地址",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "",
+									"description": "持卡人的账单城市全称",
+									"type": "text"
+								},
+								{
+									"key": "zipCode",
+									"value": "",
+									"description": "持卡人邮政编码 注：如果国家是美国或加拿大，需要为必填",
+									"type": "text"
+								},
+								{
+									"key": "state",
+									"value": "",
+									"description": "持卡人的所在州/省全称 注：如果国家是美国或加拿大，需要为必填",
+									"type": "text"
+								},
+								{
+									"key": "country",
+									"value": "",
+									"description": "持卡人的账单国家简称.ISO 2位如英国：UK",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "",
+									"description": "持卡人电子邮件",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "",
+									"description": "持卡人电话",
+									"type": "text"
+								},
+								{
+									"key": "consigneeFirstName",
+									"value": "",
+									"description": "[必须] 收货人名",
+									"type": "text"
+								},
+								{
+									"key": "consigneeLastName",
+									"value": "",
+									"description": "[必须] 收货人姓",
+									"type": "text"
+								},
+								{
+									"key": "consigneeEmail",
+									"value": "",
+									"description": "收货人邮箱",
+									"type": "text"
+								},
+								{
+									"key": "consigneePhone",
+									"value": "",
+									"description": "收货人电话",
+									"type": "text"
+								},
+								{
+									"key": "consigneeCountry",
+									"value": "",
+									"description": "收货人国家 ISO国家代码。如美国为：US",
+									"type": "text"
+								},
+								{
+									"key": "consigneeState",
+									"value": "",
+									"description": "收货人的所在州 全称 注：如果国家是美国或加拿大，需要为必填",
+									"type": "text"
+								},
+								{
+									"key": "consigneeCity",
+									"value": "",
+									"description": "收货人城市全称",
+									"type": "text"
+								},
+								{
+									"key": "consigneeAddress",
+									"value": "",
+									"description": "收货人详细地址",
+									"type": "text"
+								},
+								{
+									"key": "consigneeZip",
+									"value": "",
+									"description": "收货人邮编 注：如果国家是美国或加拿大，需要为必填",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hostname}}/ccpg/Interface",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"ccpg",
+								"Interface"
+							]
+						},
+						"description": "支付步骤: \n1. 商户发起交易请求，使用http协议，通过浏览器重定向到支付系统。\n2. 支付系统处理交易请求，并提交到银行进行消费交易。\n3. 交易完成后，支付系统把支付结果相关参数重定向到商户的交易返回地址。\n\n返回参数： \n\n| 参数名称       | 类型 | 长度  | 描述                                                                                             |\n| ------------------ | ------ | ------- | ---------------------------------------------------------------------------------------- |\n| merchantNo              | String | 5 位   | 【商户号】                                                                                |\n| subAccount          | String | 8 位   | 【子账户】                                                                                |\n| tradeNo            | String | 64 位  | 【交易流水订单号】                                                                        |\n| transactionId            | String | 50 位  | 【商户订单号】                                                                            |\n| amount        | String | 15 位  | 【交易总金额】包括订单的其他所有金额之和，只能为数字。小数位数请参考附录：交易币种   |\n| cardNumber         | String | 20 位  | 【交易卡信息】                                                                                                          |\n| secureCheckResult | String | 100 位 | 【3DS 验证结果】<br>--Cardholder authenticated<br>--Failed<br>--Authentication offered but not used<br>--Unable to Complete Authentication |\n| orderStatus        | String | 10 位  | 【交易状态】<br>-3：用户取消交易<br>-2: 待审核<br>-1: 待处理<br>0: 失败<br>1: 成功                                     |\n| orderInfo          | String | 200 位 | 【交易结果信息】Code+具体信息。详见附录：错误代码                                                        |\n| sign           | String | 64 位  | 【数据签名】<br>signInfo=sha256(merNo + gatewayNo + tradeNo + orderNo + orderCurrency + orderAmount + orderStatus + orderInfo + signkey); |\n| payMethod      | String | 50 位  | 【支付方式】                                                                                                                   |\n| returnType         | String | 10 位  | 【 返 回 类 型 】 1：浏览器实时返回<br>2：服务器实时返回<br>3：服务器异步返回                          |\n| remark             | String | 1000 位 | 【备注】返回发送数据时传输的内容                                                                              |\n| billFirstName      | String | 100 位 | 【账单者的名】                                                                                                          |\n| billLastName       | String | 50 位  | 【账单者的姓】                                                                                                          |\n| billAddress        | String | 500 位 | 【账单地址】支付成功返回交易的账单地址。支付失败则返回空值。                                    |\n| billCity           | String | 100 位 | 【账单者的账单城市】                                                                                                 |\n| billState          | String | 100 位 | 【账单者的所在州】                                                                                                    |\n| billCountry        | String | 2 位   | 【账单者的账单国家】简称.ISO 2 位 如美国：US                                                               |\n| billZip            | String | 100 位 | 【账单者的邮编】                                                                                                       |\n| billPhone          | String | 50 位  | 【账单者的电话】                                                                                                       |\n| billEmail          | String | 100 位 | 【账单者的邮件】                                                                                                       |\n| personTaxId          | String | 14 位  | 【个人税务登记号】巴西国家的税号注：针对巴西国家才返回这个参数                                  |\n| merchantBizId        | String | 100 位 | 【商户唯一键】商户唯一键值，返回值与请求值内容一样                                                    |"
+					},
+					"response": [
+						{
+							"name": "跳转支付接口",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded; charset=utf-8"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "merchantNo",
+											"value": "",
+											"description": "[必须] 商户号",
+											"type": "text"
+										},
+										{
+											"key": "subAccount",
+											"value": "",
+											"description": "[必须] 子账户",
+											"type": "text"
+										},
+										{
+											"key": "transactionId",
+											"value": "",
+											"description": "[必须] 商户订单号",
+											"type": "text"
+										},
+										{
+											"key": "amount",
+											"value": "",
+											"description": "[必须] 交易总金额 包括订单的其他所有金额之和，只能为数字。小数位数请参考附录：交易币种",
+											"type": "text"
+										},
+										{
+											"key": "currency",
+											"value": "",
+											"description": "[必须] 交易币种 币种简称，具体详见附录：交易币种",
+											"type": "text"
+										},
+										{
+											"key": "sign",
+											"value": "",
+											"description": "[必须] 【签名信息】明文加密结构: merNo + gatewayNo + orderNo + orderCurrency+orderAmount + returnUrl+ signkey;加密后的签名要转换为大写",
+											"type": "text"
+										},
+										{
+											"key": "returnUrl",
+											"value": "",
+											"description": "[必须] 【实时返回地址】返回交易实时信息到商户网店",
+											"type": "text"
+										},
+										{
+											"key": "notifyUrl",
+											"value": "",
+											"description": "[必须] 【异步返回地址】通知回调地址",
+											"type": "text"
+										},
+										{
+											"key": "cancelUrl",
+											"value": "",
+											"description": "取消交易时的跳转地址",
+											"type": "text"
+										},
+										{
+											"key": "consumerId",
+											"value": "",
+											"description": "[必须] 购物者的唯一ID",
+											"type": "text"
+										},
+										{
+											"key": "platform",
+											"value": "",
+											"description": "平台",
+											"type": "text"
+										},
+										{
+											"key": "consumerLevel",
+											"value": "",
+											"description": "购物者级别",
+											"type": "text"
+										},
+										{
+											"key": "token",
+											"value": "",
+											"description": "【一键支付】YES：需要一键支付；NO：不需要一键支付。此字段只使用在需要支付TOKEN传入",
+											"type": "text"
+										},
+										{
+											"key": "cardType",
+											"value": "",
+											"description": "卡类型 1: Visa2: Master3: JCB4: AE5: Diners6: Maestro",
+											"type": "text"
+										},
+										{
+											"key": "defaultLang",
+											"value": "",
+											"description": "【默认语言】没有指定的话，默认用浏览器的语言 \nen_US --英语\nzh_HK --中国香港\nzh_CN --中国\nde_DE --德国\nja_JP -- 日本\nes_ES -- 西班牙\nko_KR -- 韩国\nfr_FR -- 法国\nit_IT -- 意大利\nru_RU -- 俄罗斯\nen_ID -- 印度尼西亚\nvi_VN -- 越南\nth_TH -- 泰国\nms -- 马来西亚\nar_AE -- 阿拉伯\nsv_SE -- 瑞典\ntr_TR -- 土耳其\nnl_NL -- 荷兰\npt_PT -- 葡萄牙\nel_GR -- 希腊\npl_PL -- 波兰\n",
+											"type": "text"
+										},
+										{
+											"key": "products",
+											"value": "",
+											"description": "【货物详细信息】包括货物名称，ID，单价，数量 具体详见附录：货物信息",
+											"type": "text"
+										},
+										{
+											"key": "remark",
+											"value": "",
+											"description": "订单备注信息",
+											"type": "text"
+										},
+										{
+											"key": "merchantLogoNo",
+											"value": "",
+											"description": "【logo序号】数字，如：1，2，3... 表示使用定制序号的Logo",
+											"type": "text"
+										},
+										{
+											"key": "merchantBizId",
+											"value": "",
+											"description": "商户唯一键值",
+											"type": "text"
+										},
+										{
+											"key": "firstName",
+											"value": "",
+											"description": "持卡人的名",
+											"type": "text"
+										},
+										{
+											"key": "lastName",
+											"value": "",
+											"description": "持卡人的姓",
+											"type": "text"
+										},
+										{
+											"key": "address",
+											"value": "",
+											"description": "持卡人的账单地址",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "",
+											"description": "持卡人的账单城市全称",
+											"type": "text"
+										},
+										{
+											"key": "zipCode",
+											"value": "",
+											"description": "持卡人邮政编码 注：如果国家是美国或加拿大，需要为必填",
+											"type": "text"
+										},
+										{
+											"key": "state",
+											"value": "",
+											"description": "持卡人的所在州/省全称 注：如果国家是美国或加拿大，需要为必填",
+											"type": "text"
+										},
+										{
+											"key": "country",
+											"value": "",
+											"description": "持卡人的账单国家简称.ISO 2位如英国：UK",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "",
+											"description": "持卡人电子邮件",
+											"type": "text"
+										},
+										{
+											"key": "phone",
+											"value": "",
+											"description": "持卡人电话",
+											"type": "text"
+										},
+										{
+											"key": "consigneeFirstName",
+											"value": "",
+											"description": "[必须] 收货人名",
+											"type": "text"
+										},
+										{
+											"key": "consigneeLastName",
+											"value": "",
+											"description": "[必须] 收货人姓",
+											"type": "text"
+										},
+										{
+											"key": "consigneeEmail",
+											"value": "",
+											"description": "收货人邮箱",
+											"type": "text"
+										},
+										{
+											"key": "consigneePhone",
+											"value": "",
+											"description": "收货人电话",
+											"type": "text"
+										},
+										{
+											"key": "consigneeCountry",
+											"value": "",
+											"description": "收货人国家 ISO国家代码。如美国为：US",
+											"type": "text"
+										},
+										{
+											"key": "consigneeState",
+											"value": "",
+											"description": "收货人的所在州 全称 注：如果国家是美国或加拿大，需要为必填",
+											"type": "text"
+										},
+										{
+											"key": "consigneeCity",
+											"value": "",
+											"description": "收货人城市全称",
+											"type": "text"
+										},
+										{
+											"key": "consigneeAddress",
+											"value": "",
+											"description": "收货人详细地址",
+											"type": "text"
+										},
+										{
+											"key": "consigneeZip",
+											"value": "",
+											"description": "收货人邮编 注：如果国家是美国或加拿大，需要为必填",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{hostname}}/ccpg/Interface",
+									"host": [
+										"{{hostname}}"
+									],
+									"path": [
+										"ccpg",
+										"Interface"
+									]
+								}
+							},
+							"_postman_previewlanguage": "Text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "3DS验证",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{hostname}}/gateway/Cosmopay3dRequest?transactionId=3667028240783638528&checkType=W&returnUrl=http://return.mchnt.com&notifyUrl=http://callback.mchnt.com",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"gateway",
+								"Cosmopay3dRequest"
+							],
+							"query": [
+								{
+									"key": "transactionId",
+									"value": "3667028240783638528",
+									"description": "商户订单号"
+								},
+								{
+									"key": "checkType",
+									"value": "W"
+								},
+								{
+									"key": "returnUrl",
+									"value": "http://return.mchnt.com",
+									"description": "[必须] 【同步返回地址】返回交易信息到商户网店"
+								},
+								{
+									"key": "notifyUrl",
+									"value": "http://callback.mchnt.com",
+									"description": "[必须] 【异步返回地址】返回交易异步信息到商户网店"
+								}
+							]
+						},
+						"description": "对于需要且支持3DS验证的交易，商户会收到以XML格式返回的issuerUrl，商户需要按issuerUrl加上returnUrl及notifyUrl通过POST方式提交3DS验证请求，从而将付款人跳转至3DS验证页面，付款人在3DS验证页面完成发卡行要求的操作之后，商户会收到3DS验证结果。 \n### 包含3DS验证地址的返回参数\n\n| 参数名称      | 类型          | 长度             | 描述                         |\n| ------------ | ------------- | -----------------| --------------------------- |\n| merchantNo   | String        | 5 位             | 【商户号】                     |\n| subAccount   | String        | 8 位             | 【子账户】                     |\n| transactionId| String        | 50 位            | 【商户订单号】                 |\n| currency     | String        | 3 位             | 币种简称.具体详见附录：交易币种  |\n| amount       | String        | 15 位            | 包括订单的其他所有金额之和.只能为数字。小数位数请参考附录：交易币种 |\n| orderInfo    | String        | 200 位           | 【交易结果信息】Code+具体信息。详见：错误代码   |\n| issuerUrl    | String        | 500 位           | 【3DS 验证 URL】                    |\n\n### 包含3DS验证地址的返回示例\n```xml\n<?xml  version=\"1.0\"  encoding=\"UTF-8\"?>\n<respon>\n\t<merchantNo>10001</merchantNo>\n\t<subAccount>10001001</subAccount>\n\t<transactionId>1529732241532</transactionId>\n\t<amount>100.58</amount>\n\t<currency>USD</currency>\n\t<issuerUrl>https://sandbox.apacpay.com/ccpg/Cosmopay3dRequest?orderNo=3659269933947944960&type=W</issuerUrl>\n</respon>\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "本地支付接口",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "6b236dc0-703f-4a92-a312-74a7b314f3ac",
+								"exec": [
+									"var signKey = 'S4C67nzhNisJV0SE3Hb2Y288wgFDL6';\r",
+									"\r",
+									"let param = request.data;\r",
+									"let signstring = param[\"merchantNo\"] + param[\"subAccount\"] + param[\"payType\"] + param[\"transactionId\"] + param[\"currency\"] + param[\"amount\"] + param[\"firstName\"] + param[\"lastName\"] + param[\"email\"] + signKey;\r",
+									"\r",
+									"pm.environment.set(\"sign\", CryptoJS.SHA256(signstring).toString());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"followRedirects": false
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "merchantNo",
+									"value": "12594",
+									"description": "[必须] 商户号",
+									"type": "text"
+								},
+								{
+									"key": "subAccount",
+									"value": "12594005",
+									"description": "[必须] 子账户",
+									"type": "text"
+								},
+								{
+									"key": "transactionId",
+									"value": "BD200707005",
+									"description": "[必须] 商户订单号",
+									"type": "text"
+								},
+								{
+									"key": "amount",
+									"value": "25.50",
+									"description": "[必须] 交易总金额",
+									"type": "text"
+								},
+								{
+									"key": "currency",
+									"value": "BRL",
+									"description": "[必须] 交易币种",
+									"type": "text"
+								},
+								{
+									"key": "payType",
+									"value": "Boleto",
+									"description": "[必须] 【支付类型】如：SADAD、Boleto、Giropay等",
+									"type": "text"
+								},
+								{
+									"key": "payMethod",
+									"value": "Cash over counter",
+									"description": "[必须] 【支付方式】如Online bank transfer等",
+									"type": "text"
+								},
+								{
+									"key": "payRequestType",
+									"value": "",
+									"description": "【支付请求类型】1：表单提交方式（跳转）2：后端提交方式（直连）注：不传默认为1",
+									"type": "text"
+								},
+								{
+									"key": "freightFee",
+									"value": "5.00",
+									"description": "运费",
+									"type": "text"
+								},
+								{
+									"key": "discount",
+									"value": "-2.00",
+									"description": "【折扣】折扣默认为负值，且需为纯数字，只限小数点后2位小数。小数位数",
+									"type": "text"
+								},
+								{
+									"key": "products",
+									"value": "iphone#,#NUM1#,#230.00#,#1#;#ipad#,#NUM2#,#290.00#,#2",
+									"description": "【货物详细信息】实物交易时此参数为必填包括货物名称，ID，单价，数量，请参考附录：货物信息",
+									"type": "text"
+								},
+								{
+									"key": "returnUrl",
+									"value": "http://9uz3rhby.vaiwan.com/return",
+									"description": "[必须] 实时返回地址",
+									"type": "text"
+								},
+								{
+									"key": "notifyUrl",
+									"value": "http://9uz3rhby.vaiwan.com/notify",
+									"description": "[必须] 异步返回地址",
+									"type": "text"
+								},
+								{
+									"key": "merchantBizId",
+									"value": "1264512345452487",
+									"description": "商户唯一键值，交易返回会自动原封不动返回给商户",
+									"type": "text"
+								},
+								{
+									"key": "consumerId",
+									"value": "tester",
+									"description": "[必须] 购物者的唯一ID",
+									"type": "text"
+								},
+								{
+									"key": "firstName",
+									"value": "test",
+									"description": "[必须] 购物者名",
+									"type": "text"
+								},
+								{
+									"key": "lastName",
+									"value": "zhao",
+									"description": "[必须] 购物者姓",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "benditester@gmail.com",
+									"description": "[必须] 购物者电子邮件",
+									"type": "text"
+								},
+								{
+									"key": "transactionIp",
+									"value": "127.0.0.1",
+									"description": "[必须] 购物者IP  Boleto 、Pagseguro 必传",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "85471425",
+									"description": "[必须] 购物者电话",
+									"type": "text"
+								},
+								{
+									"key": "country",
+									"value": "BR",
+									"description": "购物者国家 2位ISO国家代码支付类型为Sofort、Boleto 、Pagseguro、Paysafecard、Neosurf、Yandex时必填",
+									"type": "text"
+								},
+								{
+									"key": "state",
+									"value": "SP",
+									"description": "购物者所在州 实物交易时若买家国家为美国或加拿大或巴西，则此参数为必填",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "Jundiai",
+									"description": "购物者城市 实物交易时此参数为必填",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "Billaddress",
+									"description": "购物者详细联系地址 实物交易时此参数为必填",
+									"type": "text"
+								},
+								{
+									"key": "zipCode",
+									"value": "55555",
+									"description": "购物者邮政编码 实物交易时此参数为必填",
+									"type": "text"
+								},
+								{
+									"key": "platform",
+									"value": "",
+									"description": "平台",
+									"type": "text"
+								},
+								{
+									"key": "consumerLevel",
+									"value": "",
+									"description": "购物者级别",
+									"type": "text"
+								},
+								{
+									"key": "operationSystem",
+									"value": "Win10",
+									"description": "购物者电脑操作系统",
+									"type": "text"
+								},
+								{
+									"key": "browerType",
+									"value": "Mozilla/5.0(WindowsNT10.0;WOW64)...",
+									"description": "浏览器类型",
+									"type": "text"
+								},
+								{
+									"key": "browerLang",
+									"value": "en-US",
+									"description": "浏览器语言",
+									"type": "text"
+								},
+								{
+									"key": "timeZone",
+									"value": "3",
+									"description": "时区",
+									"type": "text"
+								},
+								{
+									"key": "screenPixel",
+									"value": "1600x900",
+									"description": "屏幕分辨率",
+									"type": "text"
+								},
+								{
+									"key": "transactionWebSite",
+									"value": "http://www.taobao.com",
+									"description": "来源网址，即购物的网站域名",
+									"type": "text"
+								},
+								{
+									"key": "freightMethod",
+									"value": "xxxx",
+									"description": "购物者选择的发货方式名称",
+									"type": "text"
+								},
+								{
+									"key": "consigneeFirstName",
+									"value": "",
+									"description": "收货人名，实物交易时此参数为必填",
+									"type": "text"
+								},
+								{
+									"key": "consigneeLastName",
+									"value": "",
+									"description": "收货人姓，实物交易时此参数为必填",
+									"type": "text"
+								},
+								{
+									"key": "consigneeEmail",
+									"value": "",
+									"description": "收货人邮箱",
+									"type": "text"
+								},
+								{
+									"key": "consigneePhone",
+									"value": "",
+									"description": "收货人电话",
+									"type": "text"
+								},
+								{
+									"key": "consigneeCountry",
+									"value": "",
+									"description": "收货人国家，2位ISO 国家代码；实物交易时此参数为必填",
+									"type": "text"
+								},
+								{
+									"key": "consigneeState",
+									"value": "",
+									"description": "收货人州，实物交易且国家为美国或加拿大时此参数为必填",
+									"type": "text"
+								},
+								{
+									"key": "consigneeCity",
+									"value": "",
+									"description": "收货人城市，实物交易时此参数为必填",
+									"type": "text"
+								},
+								{
+									"key": "consigneeAddress",
+									"value": "",
+									"description": "收货人详细地址，实物交易时此参数为必填",
+									"type": "text"
+								},
+								{
+									"key": "consigneeZip",
+									"value": "",
+									"description": "收货人邮编，实物交易时此参数为必填",
+									"type": "text"
+								},
+								{
+									"key": "sign",
+									"value": "{{sign}}",
+									"description": "签名信息，signInfo=sha256(merNo + gatewayNo + APMType +orderNo + orderCurrency +orderAmount + firstName + lastName + email + signKey)加密后的签名要转换为大写",
+									"type": "text"
+								},
+								{
+									"key": "remark",
+									"value": "本地支付测试",
+									"description": "说明，存放商户自己的信息，随订单传送到支付平台，返回内容与传输内容一致.",
+									"type": "text"
+								},
+								{
+									"key": "personTaxId",
+									"value": "84461807231",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://9uZ3Rhby5oZUBwY.vaiwan.com/gateway/TPInterface",
+							"protocol": "http",
+							"host": [
+								"9uZ3Rhby5oZUBwY",
+								"vaiwan",
+								"com"
+							],
+							"path": [
+								"gateway",
+								"TPInterface"
+							]
+						},
+						"description": "#### 该接口支付采用服务器端对接，即 Server-To-Server 模式，具体流程 \r\n1. 网店下订单\r\n2. 商户支付页面收集支付卡信息\r\n3. 把订单信息(包括信用卡信息)提交到 APACPAY 直连支付接口\r\n4. APACPAY 提交支付信息至银行系统，将支付结果返回商户\r\n5. 商户服务器处理返回的支付结果\r\n\r\n注：第 3 步—第 4 步为服务器提交数据，浏览器 URL 不会改变。"
+					},
+					"response": []
+				}
+			],
+			"description": "由于需要不同的参数，该接口将呈现为两种不同的模型",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "72001f13-80cd-4c1b-a86a-314c6bdb993b",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "c1bb4031-d57a-4ae5-a13a-9378f2e16921",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "取消",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "4357e0b1-213f-4348-bcf6-ba91a508b544",
+						"exec": [
+							"var signKey = '2tp584Mu8D4kp335F4Jl611sVI8SF9';\r",
+							"\r",
+							"var param = JSON.parse(request.data);\r",
+							"let signstring = param[\"merchantNo\"] + param[\"subAccount\"];\r",
+							"param['cancelOrders'].forEach(v => signstring += v['tradeNo'])\r",
+							"signstring += signKey;\r",
+							"pm.environment.set(\"sign\", CryptoJS.SHA256(signstring).toString().toUpperCase());"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"merchantNo\":\"12594\",\r\n\t\"subAccount\":\"12594003\",\r\n\t\"sign\":\"{{sign}}\",\r\n\t\"cancelOrders\":[{\r\n\t\t\"tradeNo\":\"3667616296249458688\",\r\n\t\t\"transactionId\":\"200629002\",\r\n\t\t\"currency\":\"USD\",\r\n\t\t\"amount\":\"25.15\"\r\n\t}]\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8180/merchant/cancel",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8180",
+					"path": [
+						"merchant",
+						"cancel"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "扣款",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "47843964-869c-4c17-9d5d-5c2c08b8745f",
+						"exec": [
+							"var signKey = '2tp584Mu8D4kp335F4Jl611sVI8SF9';\r",
+							"\r",
+							"var param = JSON.parse(request.data);\r",
+							"let signstring = param[\"merchantNo\"] + param[\"subAccount\"];\r",
+							"param['captureOrders'].forEach(v => signstring += v['tradeNo'])\r",
+							"signstring += signKey;\r",
+							"pm.environment.set(\"sign\", CryptoJS.SHA256(signstring).toString().toUpperCase());"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"merchantNo\":\"12594\",\r\n\t\"subAccount\":\"12594003\",\r\n\t\"sign\":\"{{sign}}\",\r\n\t\"captureOrders\":[{\r\n\t\t\"tradeNo\":\"3667616141350666240\",\r\n\t\t\"transactionId\":\"200629001\",\r\n\t\t\"currency\":\"USD\",\r\n\t\t\"amount\":\"25.15\"\r\n\t}]\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8180/merchant/capture",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8180",
+					"path": [
+						"merchant",
+						"capture"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "退款",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "77afe3e7-29b9-4458-940a-c43e24d1cbea",
+						"exec": [
+							"var signKey = '2tp584Mu8D4kp335F4Jl611sVI8SF9';\r",
+							"\r",
+							"var param = JSON.parse(request.data);\r",
+							"let signstring = param[\"merchantNo\"] + param[\"subAccount\"];\r",
+							"param['refundOrders'].forEach(v => signstring += v['tradeNo'])\r",
+							"signstring += signKey;\r",
+							"pm.environment.set(\"sign\", CryptoJS.SHA256(signstring).toString().toUpperCase());"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"merchantNo\":\"12594\",\r\n\t\"subAccount\":\"12594003\",\r\n\t\"sign\":\"{{sign}}\",\r\n\t\"refundOrders\":[{\r\n\t\t\"tradeNo\":\"3667616141350666240\",\r\n\t\t\"transactionId\":\"200629001\",\r\n\t\t\"currency\":\"USD\",\r\n\t\t\"tradeAmount\":\"25.15\",\r\n\t\t\"refundAmount\":\"25.15\",\r\n\t\t\"refundReason\":\"test\",\r\n\t\t\"bankCode\":\"ECP\",\r\n\t\t\"refundUserName\":\"张三\",\r\n\t\t\"bankBranchName\":\"武汉商务区支行\",\r\n\t\t\"refundUserAccNo\":\"\",\r\n\t\t\"merchantRefundNo\":\"mrn001\"\r\n\t}]\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8180/merchant/refund",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8180",
+					"path": [
+						"merchant",
+						"refund"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "退款查询",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "merchantNo",
+							"value": "12594",
+							"type": "text"
+						},
+						{
+							"key": "subAccount",
+							"value": "12594003",
+							"type": "text"
+						},
+						{
+							"key": "transactionIds",
+							"value": "200629001",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "refundNos",
+							"value": "3667616141350666240_01",
+							"type": "text"
+						},
+						{
+							"key": "sign",
+							"value": "8E1E73F5DE73C2E2AB17FEDAA3B2FDCEA4E96307EE6B0E3BBB38A49648D547EB",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8180/merchant/searchRefund",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8180",
+					"path": [
+						"merchant",
+						"searchRefund"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "订单查询",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "merchantNo",
+							"value": "12594",
+							"type": "text"
+						},
+						{
+							"key": "subAccount",
+							"value": "12594003",
+							"type": "text"
+						},
+						{
+							"key": "transactionIds",
+							"value": "200629001",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "merchantBizIds",
+							"value": "mchntid",
+							"type": "text"
+						},
+						{
+							"key": "sign",
+							"value": "8E1E73F5DE73C2E2AB17FEDAA3B2FDCEA4E96307EE6B0E3BBB38A49648D547EB",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8180/merchant/customerCheck",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8180",
+					"path": [
+						"merchant",
+						"customerCheck"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "a4976b66-f76f-4205-9d29-a4b864c23d22",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "590d5bee-3771-4325-996c-ab234befed21",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
